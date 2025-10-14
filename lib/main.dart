@@ -10,9 +10,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ejercicios Clase - Práctica 1',
+      title: 'Práctica 1',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: MenuPrincipal(),
+      
     );
   }
 }
@@ -40,6 +41,12 @@ class MenuPrincipal extends StatelessWidget {
               ),
             ),
             SizedBox(height: 40),
+            Container(
+              color: Colors.amber,
+              width: 200,
+              height: 400,
+              child: const Text('Hello, Flutter!'),
+            ),
 
             // Botón Ejercicio 1
             GestureDetector(
