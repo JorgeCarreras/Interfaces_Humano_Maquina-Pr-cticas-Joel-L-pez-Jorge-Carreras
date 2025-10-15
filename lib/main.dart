@@ -16,13 +16,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         scaffoldBackgroundColor: const Color(0xFFF5F0EB),
       ),
-      home: const LoginPage(),
+      home: const LogoPage(),
     );
   }
 }
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LogoPage extends StatelessWidget {
+  const LogoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +31,20 @@ class LoginPage extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // 🔵 Círculo grande de fondo que rodea el texto
-            Positioned(
-              top: 350, // Ajusta posición vertical
-              child: Container(
-                width: 500,
-                height: 540,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.green,
+            // Círculo grande (solo borde)
+            Container(
+              width: 320,
+              height: 180,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.amber, // Color del círculo
+                  width: 20, // Grosor del borde
                 ),
               ),
             ),
 
-            // 🔸 Texto principal con círculo pequeño
+            // Texto con círculo pequeño en el centro
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -57,11 +57,11 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 20,
-                  height: 20,
+                  width: 22,
+                  height: 22,
                   decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
                     color: Colors.blue,
+                    shape: BoxShape.circle,
                   ),
                 ),
                 const Text(
