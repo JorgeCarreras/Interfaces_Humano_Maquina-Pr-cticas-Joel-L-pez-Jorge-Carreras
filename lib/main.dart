@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -10,78 +10,108 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Práctica 1',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: MenuPrincipal(),
+      debugShowCheckedModeBanner: false,
+      title: 'Don Color',
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+        scaffoldBackgroundColor: const Color(0xFFF5F0EB),
+      ),
+      home: const LogoPage(),
     );
   }
 }
 
-class MenuPrincipal extends StatelessWidget {
-  const MenuPrincipal({super.key});
+class LogoPage extends StatelessWidget {
+  const LogoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Ejercicios Clase Práctica 1'),
-        backgroundColor: Colors.blue,
-      ),
-      body: Container(
-        // Aquí definimos el color de fondo verde claro
-        color: Colors.lightGreenAccent,
-        width: double.infinity,
-        height: double.infinity,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Mis ejercicios',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-              SizedBox(height: 40),
-              Container(
-                color: Colors.amber,
-                width: 200,
-                height: 400,
-                child: const Center(child: Text('Hello, Flutter!')),
-              ),
-
-              // Botón Ejercicio 1
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Ejercicio1()),
-                  );
-                },
-                child: Container(
-                  width: 250,
-                  height: 60,
-                  margin: EdgeInsets.symmetric(vertical: 10),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //  Logo con círculo y texto
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // Círculo grande (solo borde)
+                Container(
+                  width: 320,
+                  height: 180,
                   decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 143, 228, 146),
+                      width: 90,
+                    ),
                   ),
-                  child: Center(
-                    child: Text(
-                      'Ejercicio 1: Tarjeta personal',
+                ),
+
+                // Texto “DON COLOR” con círculo azul en medio
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "DON ",
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 42,
                         fontWeight: FontWeight.bold,
+                        color: Colors.orange,
                       ),
+                    ),
+                    Container(
+                      width: 22,
+                      height: 22,
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const Text(
+                      " COLOR",
+                      style: TextStyle(
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 80),
+
+            //  Botón Ejercicio 1
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Ejercicio1()),
+                );
+              },
+              child: Container(
+                width: 250,
+                height: 60,
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 10, 255, 2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Center(
+                  child: Text(
+                    'LOGIN',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -96,10 +126,15 @@ class Ejercicio1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ejercicio 1'),
-        backgroundColor: Colors.red,
+        title: const Text('BIENVENIDOS A NUESTRO MOSTRARIO'),
+        backgroundColor: const Color.fromARGB(255, 246, 2, 217),
       ),
-      body: Placeholder(),
+      body: const Center(
+        child: Text(
+          'MOSTRARIO',
+          style: TextStyle(fontSize: 22),
+        ),
+      ),
     );
   }
 }
