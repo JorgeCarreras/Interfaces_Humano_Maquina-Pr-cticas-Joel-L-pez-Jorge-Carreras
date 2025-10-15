@@ -31,20 +31,20 @@ class LogoPage extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Círculo grande (solo borde)
+            //  Círculo grande (solo borde)
             Container(
               width: 320,
               height: 180,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.amber, // Color del círculo
-                  width: 20, // Grosor del borde
+                  color: const Color.fromARGB(255, 143, 228, 146), // Color del círculo
+                  width: 90, // Grosor del borde
                 ),
               ),
             ),
 
-            // Texto con círculo pequeño en el centro
+            // 🔹 Texto con círculo pequeño en el centro
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
