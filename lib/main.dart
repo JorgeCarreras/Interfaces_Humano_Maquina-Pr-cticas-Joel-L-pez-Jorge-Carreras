@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -10,96 +10,73 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Práctica 1',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: MenuPrincipal(),
+      debugShowCheckedModeBanner: false,
+      title: 'Don Color',
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+        scaffoldBackgroundColor: const Color(0xFFF5F0EB),
+      ),
+      home: const LoginPage(),
     );
   }
 }
 
-class MenuPrincipal extends StatelessWidget {
-  const MenuPrincipal({super.key});
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Ejercicios Clase Práctica 1'),
-        backgroundColor: Colors.blue,
-      ),
-      body: Container(
-        // Aquí definimos el color de fondo verde claro
-        color: Colors.lightGreenAccent,
-        width: double.infinity,
-        height: double.infinity,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Mis ejercicios',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+      body: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // 🔵 Círculo grande de fondo que rodea el texto
+            Positioned(
+              top: 350, // Ajusta posición vertical
+              child: Container(
+                width: 500,
+                height: 540,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.green,
                 ),
               ),
-              SizedBox(height: 40),
-              Container(
-                color: Colors.amber,
-                width: 200,
-                height: 400,
-                child: const Center(child: Text('Hello, Flutter!')),
-              ),
+            ),
 
-              // Botón Ejercicio 1
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Ejercicio1()),
-                  );
-                },
-                child: Container(
-                  width: 250,
-                  height: 60,
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Ejercicio 1: Tarjeta personal',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+            // 🔸 Texto principal con círculo pequeño
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "DON ",
+                  style: TextStyle(
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
                   ),
                 ),
-              ),
-            ],
-          ),
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.blue,
+                  ),
+                ),
+                const Text(
+                  " COLOR",
+                  style: TextStyle(
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-    );
-  }
-}
-
-// ========================= EJERCICIO 1 =========================
-class Ejercicio1 extends StatelessWidget {
-  const Ejercicio1({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Ejercicio 1'),
-        backgroundColor: Colors.red,
-      ),
-      body: Placeholder(),
     );
   }
 }
