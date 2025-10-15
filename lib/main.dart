@@ -28,97 +28,133 @@ class LogoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            //  Logo con círculo y texto
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                // Círculo grande (solo borde)
-                Container(
-                  width: 320,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 143, 228, 146),
-                      width: 90,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //  Logo con círculo y texto
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Círculo grande (solo borde)
+                  Container(
+                    width: 320,
+                    height: 180,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 143, 228, 146),
+                        width: 90,
+                      ),
                     ),
                   ),
-                ),
 
-                // Texto “DON COLOR” con círculo azul en medio
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "DON ",
+                  // 🔹 Texto “DON COLOR” con círculo azul en medio
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "DON ",
+                        style: TextStyle(
+                          fontSize: 42,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      Container(
+                        width: 22,
+                        height: 22,
+                        decoration: const BoxDecoration(
+                          color: Colors.blue,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const Text(
+                        " COLOR",
+                        style: TextStyle(
+                          fontSize: 42,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 60),
+
+              //  Campo usuario 
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Usuario',
+                    hintText: 'Introduce tu usuario',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    prefixIcon: const Icon(Icons.person),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Campo contraseña texto visible
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    hintText: 'Introduce tu contraseña',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    prefixIcon: const Icon(Icons.lock),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // Botón LOGIN
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Ejercicio1()),
+                  );
+                },
+                child: Container(
+                  width: 250,
+                  height: 60,
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 37, 236, 19),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'LOGIN',
                       style: TextStyle(
-                        fontSize: 42,
+                        color: Colors.white,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.orange,
                       ),
-                    ),
-                    Container(
-                      width: 22,
-                      height: 22,
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const Text(
-                      " COLOR",
-                      style: TextStyle(
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orange,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 80),
-
-            //  Botón Ejercicio 1
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Ejercicio1()),
-                );
-              },
-              child: Container(
-                width: 250,
-                height: 60,
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 10, 255, 2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Center(
-                  child: Text(
-                    'LOGIN',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-// ========================= EJERCICIO 1 =========================
+// ========================= SIGUIENTE PANTALLA =========================
 class Ejercicio1 extends StatelessWidget {
   const Ejercicio1({super.key});
 
@@ -126,12 +162,12 @@ class Ejercicio1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BIENVENIDOS A NUESTRO MOSTRARIO'),
-        backgroundColor: const Color.fromARGB(255, 246, 2, 217),
+        title: const Text('BIENVENIDO A NUESTRO MUSTRARIO '),
+        backgroundColor: const Color.fromARGB(255, 254, 4, 245),
       ),
       body: const Center(
         child: Text(
-          'MOSTRARIO',
+          'MUESTRARIO ',
           style: TextStyle(fontSize: 22),
         ),
       ),
