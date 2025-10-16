@@ -24,9 +24,20 @@ class MyApp extends StatelessWidget {
 class LogoPage extends StatelessWidget {
   const LogoPage({super.key});
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: const Text(
+          'Bienvenido a Don Color',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -49,7 +60,7 @@ class LogoPage extends StatelessWidget {
                     ),
                   ),
 
-                  // 🔹 Texto “DON COLOR” con círculo azul en medio
+                  // Texto “DON COLOR” con círculo azul en medio
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
