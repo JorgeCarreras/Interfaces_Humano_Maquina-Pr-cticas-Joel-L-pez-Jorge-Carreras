@@ -33,7 +33,7 @@ class LogoPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          'Bienvenido a Don Color',
+          'Bienvenido a Gandiasurf',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -65,7 +65,7 @@ class LogoPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "DON ",
+                        "GANDIA ",
                         style: TextStyle(
                           fontSize: 42,
                           fontWeight: FontWeight.bold,
@@ -81,7 +81,7 @@ class LogoPage extends StatelessWidget {
                         ),
                       ),
                       const Text(
-                        " COLOR",
+                        " SURF",
                         style: TextStyle(
                           fontSize: 42,
                           fontWeight: FontWeight.bold,
@@ -95,7 +95,7 @@ class LogoPage extends StatelessWidget {
 
               const SizedBox(height: 60),
 
-              //  Campo usuario 
+              //  Campo usuario
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: TextField(
@@ -169,19 +169,43 @@ class LogoPage extends StatelessWidget {
 class Ejercicio1 extends StatelessWidget {
   const Ejercicio1({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('BIENVENIDO A NUESTRO MUSTRARIO '),
-        backgroundColor: const Color.fromARGB(255, 254, 4, 245),
-      ),
-      body: const Center(
-        child: Text(
-          'MUESTRARIO ',
-          style: TextStyle(fontSize: 22),
-        ),
-      ),
-    );
-  }
-}
+   @override
+   Widget build(BuildContext context) {
+     return Scaffold(
+       appBar: AppBar(
+         title: const Text('Listado de actividades nauticas'),
+         backgroundColor: const Color.fromARGB(255, 254, 4, 245),
+       ),
+       body:  Center(
+         child: Image.asset(
+            'assets/img/image.png',  
+         ),
+       ),
+     );
+   }
+ }
+  // @override
+  // Widget build(BuildContext context) => Scaffold(
+  //       appBar: AppBar(
+  //         title: const Text('Second practice'),
+  //       ),
+  //       body: Center(
+  //         child: Image.asset(
+  //           'assets/img/image.avif',
+  //         ),
+  //       ),
+  //     );
+
+  //  @override
+  // Widget build(BuildContext context) => Scaffold(
+  //       appBar: AppBar(
+  //         title: const Text('Second practice'),
+  //       ),
+  //       body: const Center(
+  //         child: Icon(
+  //           Icons.icecream,
+  //           color: Colors.pink,
+  //           size: 200,
+  //         ),
+  //       ),
+  //     );
