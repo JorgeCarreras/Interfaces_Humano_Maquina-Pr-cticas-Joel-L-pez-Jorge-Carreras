@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jlopiba_carreritas/actividades.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -134,7 +136,7 @@ class LogoPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Ejercicio1()),
+                    MaterialPageRoute(builder: (context) => const ActividadesPage()),
                   );
                 },
                 child: Container(
@@ -165,47 +167,4 @@ class LogoPage extends StatelessWidget {
   }
 }
 
-// ========================= SIGUIENTE PANTALLA =========================
-class Ejercicio1 extends StatelessWidget {
-  const Ejercicio1({super.key});
 
-   @override
-   Widget build(BuildContext context) {
-     return Scaffold(
-       appBar: AppBar(
-         title: const Text('Listado de actividades nauticas'),
-         backgroundColor: const Color.fromARGB(255, 254, 4, 245),
-       ),
-       body:  Center(
-         child: Image.asset(
-            'assets/img/image.png',  
-         ),
-       ),
-     );
-   }
- }
-  // @override
-  // Widget build(BuildContext context) => Scaffold(
-  //       appBar: AppBar(
-  //         title: const Text('Second practice'),
-  //       ),
-  //       body: Center(
-  //         child: Image.asset(
-  //           'assets/img/image.avif',
-  //         ),
-  //       ),
-  //     );
-
-  //  @override
-  // Widget build(BuildContext context) => Scaffold(
-  //       appBar: AppBar(
-  //         title: const Text('Second practice'),
-  //       ),
-  //       body: const Center(
-  //         child: Icon(
-  //           Icons.icecream,
-  //           color: Colors.pink,
-  //           size: 200,
-  //         ),
-  //       ),
-  //     );
