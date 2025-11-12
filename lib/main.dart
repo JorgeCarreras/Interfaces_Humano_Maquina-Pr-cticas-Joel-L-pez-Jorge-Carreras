@@ -62,7 +62,7 @@ class LogoPage extends StatelessWidget {
                     ),
                   ),
 
-                  // Texto “DON COLOR” con círculo azul en medio
+                  // Texto “GandiaSurf” con círculo azul en medio
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
