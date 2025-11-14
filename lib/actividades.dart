@@ -39,7 +39,7 @@ class ActividadesPage extends StatelessWidget {
         id: 3,
         titulo: 'Paddle Surf',
         descripcion: 'Disfruta del mar con equilibrio y diversión.',
-        imagePath: 'assets/img/paddlesurf.jpg',
+        imagePath: 'assets/img/paddelsurf.png',
       ),
     ];
 
