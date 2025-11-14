@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Clase modelo
 class Item {
@@ -48,7 +49,6 @@ class ActividadesPage extends StatelessWidget {
         descripcion: 'Descubre este nuevo deporte recien llegado de Estados Unidos',
         imagePath: 'assets/img/WingFoil.jpg',
       ),
-   
       Item(
         id: 5,
         titulo: 'Kitesurf',
@@ -99,20 +99,36 @@ class ActividadesPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 25),
 
-                  // Texto
+                  // Texto + Iconos FontAwesome
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          actividad.titulo,
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange,
-                          ),
+
+                        Row(
+                          children: [
+                            // Icono según actividad
+                            FaIcon(
+                              _iconoActividad(actividad.titulo),
+                              size: 26,
+                              color: Colors.blue,
+                            ),
+                            const SizedBox(width: 10),
+
+                            // TÍTULO
+                            Text(
+                              actividad.titulo,
+                              style: const TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ],
                         ),
+
                         const SizedBox(height: 12),
+
                         Text(
                           actividad.descripcion,
                           style: const TextStyle(
@@ -130,5 +146,23 @@ class ActividadesPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  // Asignar iconos diferentes por actividad
+  IconData _iconoActividad(String titulo) {
+    switch (titulo) {
+      case 'Surf':
+        return FontAwesomeIcons.water;          // Ola
+      case 'Windsurf':
+        return FontAwesomeIcons.wind;           // Viento
+      case 'Paddle Surf':
+        return FontAwesomeIcons.personSwimming; // Persona nadando
+      case 'Wingfoil':
+        return FontAwesomeIcons.flag;           // Bandera (vela)
+      case 'Kitesurf':
+      return FontAwesomeIcons.cloud; // Ráfaga / viento
+      default:
+        return FontAwesomeIcons.circleInfo;     // Icono genérico
+    }
   }
 }
