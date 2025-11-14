@@ -41,6 +41,20 @@ class ActividadesPage extends StatelessWidget {
         descripcion: 'Disfruta del mar con equilibrio y diversión.',
         imagePath: 'assets/img/paddelsurf.png',
       ),
+      // NUEVA Clase WINGFOIL
+      Item(
+        id: 4,
+        titulo: 'Wingfoil',
+        descripcion: 'Descubre este nuevo deporte recien llegado de Estados Unidos',
+        imagePath: 'assets/img/WingFoil.jpg',
+      ),
+   
+      Item(
+        id: 5,
+        titulo: 'Kitesurf',
+        descripcion: 'Vuela sobre el mar y disfruta de la adrenalina del viento.',
+        imagePath: 'assets/img/kitesurf.jpg',
+      ),
     ];
 
     return Scaffold(
@@ -58,9 +72,7 @@ class ActividadesPage extends StatelessWidget {
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                    'Próximamente: detalles de ${actividad.titulo}.',
-                  ),
+                  content: Text('Próximamente: detalles de ${actividad.titulo}.'),
                   duration: const Duration(seconds: 2),
                 ),
               );
@@ -75,20 +87,19 @@ class ActividadesPage extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Imagen aumentada
+                  // Imagen
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50),
                     child: Image.asset(
                       actividad.imagePath,
-                      width: 120,   
-                      height: 120,  
+                      width: 120,
+                      height: 120,
                       fit: BoxFit.cover,
                     ),
                   ),
-
                   const SizedBox(width: 25),
 
-                  // Título y descripción más grandes
+                  // Texto
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +107,7 @@ class ActividadesPage extends StatelessWidget {
                         Text(
                           actividad.titulo,
                           style: const TextStyle(
-                            fontSize: 28, 
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
                             color: Colors.orange,
                           ),
@@ -105,7 +116,7 @@ class ActividadesPage extends StatelessWidget {
                         Text(
                           actividad.descripcion,
                           style: const TextStyle(
-                            fontSize: 20, 
+                            fontSize: 20,
                             color: Colors.black87,
                           ),
                         ),
