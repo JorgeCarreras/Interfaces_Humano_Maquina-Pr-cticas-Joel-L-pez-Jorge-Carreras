@@ -59,32 +59,36 @@ class ActividadesPage extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                      'Próximamente: detalles de ${actividad.titulo}.'),
+                    'Próximamente: detalles de ${actividad.titulo}.',
+                  ),
                   duration: const Duration(seconds: 2),
                 ),
               );
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               decoration: const BoxDecoration(
                 border: Border(
-                  bottom: BorderSide(color: Colors.grey, width: 0.4),
+                  bottom: BorderSide(color: Colors.grey, width: 0.5),
                 ),
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Imagen
+                  // Imagen aumentada
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(40),
+                    borderRadius: BorderRadius.circular(50),
                     child: Image.asset(
                       actividad.imagePath,
-                      width: 70,
-                      height: 70,
+                      width: 120,   
+                      height: 120,  
                       fit: BoxFit.cover,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  // Título y descripción
+
+                  const SizedBox(width: 25),
+
+                  // Título y descripción más grandes
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,16 +96,16 @@ class ActividadesPage extends StatelessWidget {
                         Text(
                           actividad.titulo,
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 28, 
                             fontWeight: FontWeight.bold,
                             color: Colors.orange,
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 12),
                         Text(
                           actividad.descripcion,
                           style: const TextStyle(
-                            fontSize: 15,
+                            fontSize: 20, 
                             color: Colors.black87,
                           ),
                         ),
