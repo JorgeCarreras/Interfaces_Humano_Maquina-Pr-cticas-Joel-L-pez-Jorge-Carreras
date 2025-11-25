@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jlopiba_carreritas/actividades.dart';
-
+import 'package:jlopiba_carreritas/loading_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -136,7 +136,7 @@ class LogoPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ActividadesPage()),
+                    MaterialPageRoute(builder: (context) => const LoadingPage()),
                   );
                 },
                 child: Container(
