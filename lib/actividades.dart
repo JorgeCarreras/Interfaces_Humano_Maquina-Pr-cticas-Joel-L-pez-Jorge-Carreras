@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'detalle_actividad.dart';
+
 
 
 class Item {
@@ -112,13 +114,14 @@ class ActividadesPage extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Próximamente: detalles de ${actividad.titulo}.'),
-                  duration: const Duration(seconds: 2),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetalleActividadPage(actividad: actividad),
                 ),
               );
             },
+
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               decoration: const BoxDecoration(
