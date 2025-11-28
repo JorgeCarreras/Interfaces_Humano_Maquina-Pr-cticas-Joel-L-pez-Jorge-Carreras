@@ -133,8 +133,8 @@ class ActividadesPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Imagen
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
+                  Hero(
+                    tag: actividad.id,  // IMPORTANTE: usar id como tag único
                     child: Image.asset(
                       actividad.imagePath,
                       width: 120,
@@ -142,6 +142,7 @@ class ActividadesPage extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
+
                   const SizedBox(width: 25),
 
                   // Texto + Iconos FontAwesome

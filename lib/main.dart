@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Don Color',
+      title: 'GandiaSurf',
       theme: ThemeData(
         primarySwatch: Colors.orange,
         scaffoldBackgroundColor: const Color(0xFFF5F0EB),

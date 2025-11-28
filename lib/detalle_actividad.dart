@@ -42,13 +42,18 @@ class DetalleActividadPage extends StatelessWidget {
                   padding: const EdgeInsets.all(20),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(25),
-                    child: Image.asset(
-                      actividad.imagePath,
-                      width: double.infinity,
-                      height: 250,
-                      fit: BoxFit.cover,
-                    ),
+                    child: 
+                      Hero(
+                        tag: actividad.id,
+                        child: Image.asset(
+                          actividad.imagePath,
+                          width: double.infinity,
+                          height: 250,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                   ),
+
                 ),
 
                 //  2. TARJETA DE INFORMACIÓN
