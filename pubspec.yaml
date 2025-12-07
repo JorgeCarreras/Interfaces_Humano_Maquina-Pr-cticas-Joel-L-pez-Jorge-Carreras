@@ -30,3 +30,4 @@ flutter:
   # Tus imágenes locales
   assets:
     - assets/img/
+    - assets/data/actividades.json
