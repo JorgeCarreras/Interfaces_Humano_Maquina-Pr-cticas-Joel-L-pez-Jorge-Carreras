@@ -25,7 +25,7 @@ class DetalleActividadPage extends StatelessWidget {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 255, 214, 165),
+              Color.fromARGB(255, 171, 165, 255),
               Color.fromARGB(255, 255, 244, 224),
             ],
             begin: Alignment.topCenter,
@@ -37,7 +37,7 @@ class DetalleActividadPage extends StatelessWidget {
             child: Column(
               children: [
 
-                // 🔵 1. IMAGEN PRINCIPAL
+                //  1. IMAGEN PRINCIPAL
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: ClipRRect(
@@ -48,7 +48,7 @@ class DetalleActividadPage extends StatelessWidget {
                         child: Image.asset(
                           actividad.imagePath,
                           width: double.infinity,
-                          height: 250,
+                          height: 500,
                           fit: BoxFit.cover,
                         ),
                       ),

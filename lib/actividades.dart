@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'detalle_actividad.dart';
-import 'dart:convert';             
-import 'package:flutter/services.dart'; 
+import 'dart:convert';             // NECESARIO para jsonDecode
+import 'package:flutter/services.dart'; // NECESARIO para rootBundle
 
 
 class Item {
@@ -29,7 +29,7 @@ class Item {
     required this.rating,
   });
 
-  //Constructor desde JSON
+  // NUEVO: Constructor desde JSON
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
       id: json["id"],
@@ -46,10 +46,9 @@ class Item {
 }
 
 
-
-//Funcion para cargar actividades desde json aplicandolo al future build
-
-
+// ---------------------------------------------------------
+//  FUNCIÓN PARA CARGAR ACTIVIDADES DESDE JSON
+// ---------------------------------------------------------
 Future<List<Item>> cargarActividades() async {
   final String data =
       await rootBundle.loadString('assets/data/actividades.json');

@@ -69,14 +69,14 @@ class LogoPage extends StatelessWidget {
                       const Text(
                         "GANDIA ",
                         style: TextStyle(
-                          fontSize: 42,
+                          fontSize: 52,
                           fontWeight: FontWeight.bold,
                           color: Colors.orange,
                         ),
                       ),
                       Container(
-                        width: 22,
-                        height: 22,
+                        width: 52,
+                        height: 52,
                         decoration: const BoxDecoration(
                           color: Colors.blue,
                           shape: BoxShape.circle,
@@ -85,7 +85,7 @@ class LogoPage extends StatelessWidget {
                       const Text(
                         " SURF",
                         style: TextStyle(
-                          fontSize: 42,
+                          fontSize: 52,
                           fontWeight: FontWeight.bold,
                           color: Colors.orange,
                         ),
