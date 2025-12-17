@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jlopiba_carreritas/actividades.dart';
 import 'package:jlopiba_carreritas/loading_page.dart';
+import 'portada.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         scaffoldBackgroundColor: const Color(0xFFF5F0EB),
       ),
-      home: const LogoPage(),
+      home: const PortadaPage(),
     );
   }
 }
