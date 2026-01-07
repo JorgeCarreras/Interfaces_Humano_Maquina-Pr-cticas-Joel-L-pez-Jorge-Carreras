@@ -69,7 +69,7 @@ class PortadaPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const FormReservaPage()),
+                    MaterialPageRoute(builder: (context) => const RegistroActividadPage()),
                   );
                 },
                 child: const Text(
