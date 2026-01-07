@@ -1,10 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 enum TipoRegistro { mayor, menor }
 
-// =====================================================
-// Widget auxiliar para mostrar filas del resumen
-// =====================================================
+// ===== Widget auxiliar para resumen =====
 Widget resumenFila(String titulo, String valor) {
   final v = valor.trim();
   return Padding(
@@ -14,21 +13,141 @@ Widget resumenFila(String titulo, String valor) {
       children: [
         Expanded(
           flex: 3,
-          child: Text(
-            titulo,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
+          child: Text(titulo, style: const TextStyle(fontWeight: FontWeight.w600)),
         ),
         const SizedBox(width: 8),
-        Expanded(
-          flex: 5,
-          child: Text(v.isEmpty ? '-' : v),
-        ),
+        Expanded(flex: 5, child: Text(v.isEmpty ? '-' : v)),
       ],
     ),
   );
 }
 
+// =====================================================
+// Panel derecho: carrusel automático con FadeTransition
+// =====================================================
+class ActividadesCarousel extends StatefulWidget {
+  const ActividadesCarousel({
+    super.key,
+    required this.imagePaths,
+    this.interval = const Duration(seconds: 4),
+    this.fadeDuration = const Duration(milliseconds: 700),
+    this.borderRadius = 16,
+  });
+
+  final List<String> imagePaths;
+  final Duration interval;
+  final Duration fadeDuration;
+  final double borderRadius;
+
+  @override
+  State<ActividadesCarousel> createState() => _ActividadesCarouselState();
+}
+
+class _ActividadesCarouselState extends State<ActividadesCarousel> {
+  int _index = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.imagePaths.isNotEmpty) {
+      _timer = Timer.periodic(widget.interval, (_) {
+        if (!mounted) return;
+        setState(() => _index = (_index + 1) % widget.imagePaths.length);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.imagePaths.isEmpty) {
+      return const Center(child: Text('No hay imágenes en assets/img/'));
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(widget.borderRadius),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          AnimatedSwitcher(
+            duration: widget.fadeDuration,
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            transitionBuilder: (child, animation) =>
+                FadeTransition(opacity: animation, child: child),
+            child: Image.asset(
+              widget.imagePaths[_index],
+              key: ValueKey(widget.imagePaths[_index]),
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Overlay para legibilidad (opcional)
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.25),
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.25),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            left: 14,
+            bottom: 12,
+            right: 14,
+            child: Row(
+              children: [
+                const Icon(Icons.water, color: Colors.white),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    'Actividades acuáticas',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                // “Dots” indicador
+                Row(
+                  children: List.generate(widget.imagePaths.length, (i) {
+                    final active = i == _index;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      margin: const EdgeInsets.only(left: 6),
+                      width: active ? 16 : 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: active ? Colors.white : Colors.white.withOpacity(0.45),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// =====================================================
+// PANTALLA: Izquierda formulario / Derecha carrusel
+// =====================================================
 class RegistroActividadPage extends StatefulWidget {
   const RegistroActividadPage({super.key});
 
@@ -70,6 +189,15 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
 
   bool _passVisible = false;
 
+
+  final List<String> _imagenes = const [
+    'assets/img/surf.jpg',
+    'assets/img/paddlesurf.jpg',
+    'assets/img/windsurf.jpg',
+    'assets/img/wingfoil.jpg',
+    'assets/img/kitesurf.jpg',
+  ];
+
   @override
   void dispose() {
     _mayorNombreCtrl.dispose();
@@ -106,10 +234,9 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
   int _edad(DateTime nacimiento) {
     final now = DateTime.now();
     int age = now.year - nacimiento.year;
-    final hasHadBirthdayThisYear =
-        (now.month > nacimiento.month) ||
-            (now.month == nacimiento.month && now.day >= nacimiento.day);
-    if (!hasHadBirthdayThisYear) age--;
+    final hadBirthday =
+        (now.month > nacimiento.month) || (now.month == nacimiento.month && now.day >= nacimiento.day);
+    if (!hadBirthday) age--;
     return age;
   }
 
@@ -179,14 +306,12 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
   String? _fechaVal(DateTime? d, {required bool mayor}) {
     if (d == null) return 'Fecha de nacimiento obligatoria';
     final e = _edad(d);
-
     if (mayor && e < 18) return 'Debe ser mayor de edad (18+)';
     if (!mayor && e >= 18) return 'Debe ser menor de edad (<18)';
     return null;
   }
 
-  InputDecoration _dec(String label, {String? hint, Widget? suffixIcon}) =>
-      InputDecoration(
+  InputDecoration _dec(String label, {String? hint, Widget? suffixIcon}) => InputDecoration(
         labelText: label,
         hintText: hint,
         border: const OutlineInputBorder(),
@@ -198,20 +323,15 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
   void _cambiarTipo(TipoRegistro? t) {
     if (t == null) return;
     setState(() => _tipo = t);
-    _formKey.currentState?.reset(); // opcional
+    _formKey.currentState?.reset();
   }
 
-  // =====================================================
-  // ENVÍO: valida -> muestra resumen -> confirmar -> "envía"
-  // =====================================================
   void _enviar() {
-    // Validación de campos (TextFormField)
     if (!_formKey.currentState!.validate()) return;
 
-    // Validación extra: fecha nacimiento acorde a mayor/menor
     final isMenor = _tipo == TipoRegistro.menor;
-    final errFecha = _fechaVal(isMenor ? _menorNacimiento : _mayorNacimiento,
-        mayor: !isMenor);
+    final errFecha =
+        _fechaVal(isMenor ? _menorNacimiento : _mayorNacimiento, mayor: !isMenor);
     if (errFecha != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errFecha)));
       return;
@@ -232,8 +352,7 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!isMenor) ...[
-                const Text('Datos del participante',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Datos del participante', style: TextStyle(fontWeight: FontWeight.bold)),
                 const Divider(),
                 resumenFila('Nombre', _mayorNombreCtrl.text),
                 resumenFila('Apellidos', _mayorApellidosCtrl.text),
@@ -244,8 +363,7 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
                 resumenFila('Contraseña', '••••••••'),
               ],
               if (isMenor) ...[
-                const Text('Datos del menor',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Datos del menor', style: TextStyle(fontWeight: FontWeight.bold)),
                 const Divider(),
                 resumenFila('Nombre', _menorNombreCtrl.text),
                 resumenFila('Apellidos', _menorApellidosCtrl.text),
@@ -253,8 +371,7 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
                 resumenFila('DNI/NIE', _menorDniCtrl.text.toUpperCase()),
                 resumenFila('Contraseña', '••••••••'),
                 const SizedBox(height: 12),
-                const Text('Tutor legal',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Tutor legal', style: TextStyle(fontWeight: FontWeight.bold)),
                 const Divider(),
                 resumenFila('Nombre', _tutorNombreCtrl.text),
                 resumenFila('Apellidos', _tutorApellidosCtrl.text),
@@ -286,11 +403,9 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
   }
 
   void _confirmarEnvio() {
-    // Aquí conectarías Firebase/API. Por ahora confirmación visual:
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Registro enviado correctamente')),
     );
-
     _limpiarTodo();
   }
 
@@ -326,266 +441,288 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
     });
   }
 
+  // =====================================================
+  // Layout responsive: Row (pantalla grande) / Column (móvil)
+  // =====================================================
   @override
   Widget build(BuildContext context) {
-    final isMenor = _tipo == TipoRegistro.menor;
-
     return Scaffold(
       appBar: AppBar(title: const Text('Registro en actividad')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: ListView(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth >= 900;
+
+          final form = _buildFormulario();
+
+          final right = Padding(
+            padding: const EdgeInsets.all(16),
+            child: ActividadesCarousel(
+              imagePaths: _imagenes,
+              interval: const Duration(seconds: 4),
+              fadeDuration: const Duration(milliseconds: 700),
+              borderRadius: 18,
+            ),
+          );
+
+          if (isWide) {
+            return Row(
+              children: [
+                // Izquierda
+                Expanded(
+                  flex: 3,
+                  child: form,
+                ),
+                // Derecha
+                Expanded(
+                  flex: 2,
+                  child: right,
+                ),
+              ],
+            );
+          }
+
+          // Móvil / estrecho: columna
+          return ListView(
+            padding: EdgeInsets.zero,
             children: [
-              // Selector Mayor/Menor
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Tipo de registro',
-                          style: TextStyle(fontWeight: FontWeight.w600)),
-                      RadioListTile<TipoRegistro>(
-                        title: const Text('Mayor de edad'),
-                        value: TipoRegistro.mayor,
-                        groupValue: _tipo,
-                        onChanged: _cambiarTipo,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      RadioListTile<TipoRegistro>(
-                        title: const Text('Menor de edad'),
-                        value: TipoRegistro.menor,
-                        groupValue: _tipo,
-                        onChanged: _cambiarTipo,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                    ],
+              SizedBox(height: 420, child: right),
+              form,
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildFormulario() {
+    final isMenor = _tipo == TipoRegistro.menor;
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Form(
+        key: _formKey,
+        child: ListView(
+          // Para que en modo Row no haya overflow
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Tipo de registro',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
+                    RadioListTile<TipoRegistro>(
+                      title: const Text('Mayor de edad'),
+                      value: TipoRegistro.mayor,
+                      groupValue: _tipo,
+                      onChanged: _cambiarTipo,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    RadioListTile<TipoRegistro>(
+                      title: const Text('Menor de edad'),
+                      value: TipoRegistro.menor,
+                      groupValue: _tipo,
+                      onChanged: _cambiarTipo,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            _sp(),
+
+            if (!isMenor) ...[
+              const Text('Datos del usuario',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              _sp(),
+              TextFormField(
+                controller: _mayorNombreCtrl,
+                decoration: _dec('Nombre'),
+                validator: (v) => _reqMin(v, 'Nombre'),
+              ),
+              _sp(),
+              TextFormField(
+                controller: _mayorApellidosCtrl,
+                decoration: _dec('Apellidos'),
+                validator: (v) => _reqMin(v, 'Apellidos'),
+              ),
+              _sp(),
+              InkWell(
+                onTap: () => _pickFechaNacimiento(mayor: true),
+                child: InputDecorator(
+                  decoration: _dec('Fecha de nacimiento',
+                      hint: 'Selecciona una fecha',
+                      suffixIcon: const Icon(Icons.calendar_month)),
+                  child: Text(
+                    _mayorNacimiento == null
+                        ? 'Pulsa para seleccionar'
+                        : _fmtFecha(_mayorNacimiento),
                   ),
                 ),
               ),
               _sp(),
-
-              // ===== Sección Mayor =====
-              if (!isMenor) ...[
-                const Text('Datos del usuario',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-                _sp(),
-                TextFormField(
-                  controller: _mayorNombreCtrl,
-                  decoration: _dec('Nombre'),
-                  validator: (v) => _reqMin(v, 'Nombre'),
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _mayorApellidosCtrl,
-                  decoration: _dec('Apellidos'),
-                  validator: (v) => _reqMin(v, 'Apellidos'),
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-
-                // Fecha nacimiento (botón)
-                InkWell(
-                  onTap: () => _pickFechaNacimiento(mayor: true),
-                  child: InputDecorator(
-                    decoration: _dec('Fecha de nacimiento',
-                        hint: 'Selecciona una fecha',
-                        suffixIcon: const Icon(Icons.calendar_month)),
-                    child: Text(
-                      _mayorNacimiento == null
-                          ? 'Pulsa para seleccionar'
-                          : _fmtFecha(_mayorNacimiento),
-                    ),
-                  ),
-                ),
-                _sp(),
-
-                TextFormField(
-                  controller: _mayorTelefonoCtrl,
-                  decoration: _dec('Teléfono', hint: 'Solo dígitos'),
-                  keyboardType: TextInputType.phone,
-                  validator: _telefonoVal,
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _mayorDniCtrl,
-                  decoration:
-                      _dec('DNI / NIE', hint: '12345678Z o X1234567L'),
-                  textCapitalization: TextCapitalization.characters,
-                  validator: _dniVal,
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _mayorEmailCtrl,
-                  decoration: _dec('Email'),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: _emailVal,
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _mayorPassCtrl,
-                  obscureText: !_passVisible,
-                  decoration: _dec(
-                    'Contraseña',
-                    hint: 'Mín. 6 caracteres',
-                    suffixIcon: IconButton(
-                      onPressed: () => setState(() => _passVisible = !_passVisible),
-                      icon: Icon(_passVisible ? Icons.visibility_off : Icons.visibility),
-                    ),
-                  ),
-                  validator: _passVal,
-                  textInputAction: TextInputAction.done,
-                ),
-              ],
-
-              // ===== Sección Menor + Tutor =====
-              if (isMenor) ...[
-                const Text('Datos del menor',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-                _sp(),
-                TextFormField(
-                  controller: _menorNombreCtrl,
-                  decoration: _dec('Nombre del menor'),
-                  validator: (v) => _reqMin(v, 'Nombre del menor'),
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _menorApellidosCtrl,
-                  decoration: _dec('Apellidos del menor'),
-                  validator: (v) => _reqMin(v, 'Apellidos del menor'),
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-
-                // Fecha nacimiento menor
-                InkWell(
-                  onTap: () => _pickFechaNacimiento(mayor: false),
-                  child: InputDecorator(
-                    decoration: _dec('Fecha de nacimiento del menor',
-                        hint: 'Selecciona una fecha',
-                        suffixIcon: const Icon(Icons.calendar_month)),
-                    child: Text(
-                      _menorNacimiento == null
-                          ? 'Pulsa para seleccionar'
-                          : _fmtFecha(_menorNacimiento),
-                    ),
-                  ),
-                ),
-                _sp(),
-
-                TextFormField(
-                  controller: _menorDniCtrl,
-                  decoration: _dec('DNI / NIE del menor'),
-                  textCapitalization: TextCapitalization.characters,
-                  validator: _dniVal,
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _menorPassCtrl,
-                  obscureText: !_passVisible,
-                  decoration: _dec(
-                    'Contraseña (cuenta del menor)',
-                    hint: 'Mín. 6 caracteres',
-                    suffixIcon: IconButton(
-                      onPressed: () => setState(() => _passVisible = !_passVisible),
-                      icon: Icon(_passVisible ? Icons.visibility_off : Icons.visibility),
-                    ),
-                  ),
-                  validator: _passVal,
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-
-                const Divider(height: 28),
-                const Text('Datos del tutor legal',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-                _sp(),
-                TextFormField(
-                  controller: _tutorNombreCtrl,
-                  decoration: _dec('Nombre del tutor'),
-                  validator: (v) => _reqMin(v, 'Nombre del tutor'),
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _tutorApellidosCtrl,
-                  decoration: _dec('Apellidos del tutor'),
-                  validator: (v) => _reqMin(v, 'Apellidos del tutor'),
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _tutorTelefonoCtrl,
-                  decoration: _dec('Teléfono del tutor', hint: 'Solo dígitos'),
-                  keyboardType: TextInputType.phone,
-                  validator: _telefonoVal,
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _tutorDniCtrl,
-                  decoration: _dec('DNI / NIE del tutor'),
-                  textCapitalization: TextCapitalization.characters,
-                  validator: _dniVal,
-                  textInputAction: TextInputAction.next,
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _tutorEmailCtrl,
-                  decoration: _dec('Email del tutor'),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: _emailVal,
-                  textInputAction: TextInputAction.done,
-                ),
-                _sp(),
-
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text(
-                      '¿El menor puede irse solo al acabar la actividad?'),
-                  value: _puedeIrseSolo,
-                  onChanged: (v) => setState(() => _puedeIrseSolo = v),
-                ),
-                _sp(),
-                TextFormField(
-                  controller: _observacionesCtrl,
-                  decoration: _dec('Observaciones',
-                      hint: 'Alergias, medicación, condiciones, etc.'),
-                  minLines: 3,
-                  maxLines: 6,
-                ),
-              ],
-
+              TextFormField(
+                controller: _mayorTelefonoCtrl,
+                decoration: _dec('Teléfono', hint: 'Solo dígitos'),
+                keyboardType: TextInputType.phone,
+                validator: _telefonoVal,
+              ),
               _sp(),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _enviar,
-                      icon: const Icon(Icons.check),
-                      label: const Text('Enviar registro'),
-                    ),
+              TextFormField(
+                controller: _mayorDniCtrl,
+                decoration: _dec('DNI / NIE', hint: '12345678Z o X1234567L'),
+                textCapitalization: TextCapitalization.characters,
+                validator: _dniVal,
+              ),
+              _sp(),
+              TextFormField(
+                controller: _mayorEmailCtrl,
+                decoration: _dec('Email'),
+                keyboardType: TextInputType.emailAddress,
+                validator: _emailVal,
+              ),
+              _sp(),
+              TextFormField(
+                controller: _mayorPassCtrl,
+                obscureText: !_passVisible,
+                decoration: _dec(
+                  'Contraseña',
+                  hint: 'Mín. 6 caracteres',
+                  suffixIcon: IconButton(
+                    onPressed: () => setState(() => _passVisible = !_passVisible),
+                    icon: Icon(_passVisible ? Icons.visibility_off : Icons.visibility),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _limpiarTodo,
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Limpiar'),
-                    ),
-                  ),
-                ],
+                ),
+                validator: _passVal,
               ),
             ],
-          ),
+
+            if (isMenor) ...[
+              const Text('Datos del menor',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              _sp(),
+              TextFormField(
+                controller: _menorNombreCtrl,
+                decoration: _dec('Nombre del menor'),
+                validator: (v) => _reqMin(v, 'Nombre del menor'),
+              ),
+              _sp(),
+              TextFormField(
+                controller: _menorApellidosCtrl,
+                decoration: _dec('Apellidos del menor'),
+                validator: (v) => _reqMin(v, 'Apellidos del menor'),
+              ),
+              _sp(),
+              InkWell(
+                onTap: () => _pickFechaNacimiento(mayor: false),
+                child: InputDecorator(
+                  decoration: _dec('Fecha nacimiento del menor',
+                      hint: 'Selecciona una fecha',
+                      suffixIcon: const Icon(Icons.calendar_month)),
+                  child: Text(
+                    _menorNacimiento == null
+                        ? 'Pulsa para seleccionar'
+                        : _fmtFecha(_menorNacimiento),
+                  ),
+                ),
+              ),
+              _sp(),
+              TextFormField(
+                controller: _menorDniCtrl,
+                decoration: _dec('DNI / NIE del menor'),
+                textCapitalization: TextCapitalization.characters,
+                validator: _dniVal,
+              ),
+              _sp(),
+              TextFormField(
+                controller: _menorPassCtrl,
+                obscureText: !_passVisible,
+                decoration: _dec(
+                  'Contraseña (cuenta del menor)',
+                  hint: 'Mín. 6 caracteres',
+                  suffixIcon: IconButton(
+                    onPressed: () => setState(() => _passVisible = !_passVisible),
+                    icon: Icon(_passVisible ? Icons.visibility_off : Icons.visibility),
+                  ),
+                ),
+                validator: _passVal,
+              ),
+              _sp(),
+              const Divider(height: 28),
+              const Text('Datos del tutor legal',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              _sp(),
+              TextFormField(
+                controller: _tutorNombreCtrl,
+                decoration: _dec('Nombre del tutor'),
+                validator: (v) => _reqMin(v, 'Nombre del tutor'),
+              ),
+              _sp(),
+              TextFormField(
+                controller: _tutorApellidosCtrl,
+                decoration: _dec('Apellidos del tutor'),
+                validator: (v) => _reqMin(v, 'Apellidos del tutor'),
+              ),
+              _sp(),
+              TextFormField(
+                controller: _tutorTelefonoCtrl,
+                decoration: _dec('Teléfono del tutor', hint: 'Solo dígitos'),
+                keyboardType: TextInputType.phone,
+                validator: _telefonoVal,
+              ),
+              _sp(),
+              TextFormField(
+                controller: _tutorDniCtrl,
+                decoration: _dec('DNI / NIE del tutor'),
+                textCapitalization: TextCapitalization.characters,
+                validator: _dniVal,
+              ),
+              _sp(),
+              TextFormField(
+                controller: _tutorEmailCtrl,
+                decoration: _dec('Email del tutor'),
+                keyboardType: TextInputType.emailAddress,
+                validator: _emailVal,
+              ),
+              _sp(),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('¿El menor puede irse solo al acabar la actividad?'),
+                value: _puedeIrseSolo,
+                onChanged: (v) => setState(() => _puedeIrseSolo = v),
+              ),
+              _sp(),
+              TextFormField(
+                controller: _observacionesCtrl,
+                decoration: _dec('Observaciones',
+                    hint: 'Alergias, medicación, condiciones, etc.'),
+                minLines: 3,
+                maxLines: 6,
+              ),
+            ],
+
+            _sp(),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _enviar,
+                    icon: const Icon(Icons.check),
+                    label: const Text('Enviar registro'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _limpiarTodo,
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Limpiar'),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
