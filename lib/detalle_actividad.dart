@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'actividades.dart'; // para acceder al modelo Item
+import 'actividades.dart';
 
 class DetalleActividadPage extends StatelessWidget {
   final Item actividad;
@@ -20,8 +20,6 @@ class DetalleActividadPage extends StatelessWidget {
       ),
       extendBodyBehindAppBar: true,
       body: Container(
-
-
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -37,26 +35,24 @@ class DetalleActividadPage extends StatelessWidget {
             child: Column(
               children: [
 
-                //  1. IMAGEN PRINCIPAL
+                // IMAGEN
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(25),
-                    child: 
-                      Hero(
-                        tag: actividad.id,
-                        child: Image.asset(
-                          actividad.imagePath,
-                          width: double.infinity,
-                          height: 500,
-                          fit: BoxFit.cover,
-                        ),
+                    child: Hero(
+                      tag: actividad.id,
+                      child: Image.asset(
+                        actividad.imagePath,
+                        width: double.infinity,
+                        height: 500,
+                        fit: BoxFit.cover,
                       ),
+                    ),
                   ),
-
                 ),
 
-                //  2. TARJETA DE INFORMACIÓN
+                // TARJETA INFO
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   padding: const EdgeInsets.all(25),
@@ -75,14 +71,10 @@ class DetalleActividadPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      // Título con icono
                       Row(
                         children: [
-                          FaIcon(
-                            FontAwesomeIcons.water,
-                            color: Colors.blue.shade700,
-                            size: 28,
-                          ),
+                          FaIcon(FontAwesomeIcons.water,
+                              color: Colors.blue.shade700, size: 28),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
@@ -99,7 +91,6 @@ class DetalleActividadPage extends StatelessWidget {
 
                       const SizedBox(height: 20),
 
-                      // Descripción larga
                       Text(
                         actividad.descripcionLarga,
                         style: const TextStyle(
@@ -110,27 +101,43 @@ class DetalleActividadPage extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 25),
-
-                      // Línea divisoria
                       Container(
                         height: 2,
                         width: double.infinity,
                         color: Colors.orange.withOpacity(0.4),
                       ),
-
                       const SizedBox(height: 25),
 
-                      // Información adicional
                       _infoRow(FontAwesomeIcons.euroSign, "Precio", actividad.precio),
                       const SizedBox(height: 15),
-
                       _infoRow(FontAwesomeIcons.clock, "Duración", actividad.duracion),
                       const SizedBox(height: 15),
-
                       _infoRow(FontAwesomeIcons.personSwimming, "Nivel", actividad.nivel),
                       const SizedBox(height: 15),
+                      _infoRow(FontAwesomeIcons.star, "Valoración",
+                          actividad.rating.toString()),
 
-                      _infoRow(FontAwesomeIcons.star, "Valoración", actividad.rating.toString()),
+                      const SizedBox(height: 30),
+
+                      // 🔥 BOTÓN RESERVAR
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.event_available),
+                          label: const Text("Reservar"),
+                          onPressed: () async {
+                            final horario =
+                                await _mostrarDialogoHorario(context);
+
+                            if (horario == null) return;
+
+                            await _mostrarDialogoConfirmacion(
+                              context,
+                              horario,
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -144,7 +151,6 @@ class DetalleActividadPage extends StatelessWidget {
     );
   }
 
-  //  Widget reutilizable para cada fila de información
   Widget _infoRow(IconData icono, String titulo, String valor) {
     return Row(
       children: [
@@ -158,12 +164,97 @@ class DetalleActividadPage extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Text(
-            valor,
-            style: const TextStyle(fontSize: 20),
-          ),
+          child: Text(valor, style: const TextStyle(fontSize: 20)),
         ),
       ],
     );
   }
+}
+
+/// ----------------------
+/// DIALOGO 1: ELEGIR HORARIO
+/// ----------------------
+Future<String?> _mostrarDialogoHorario(BuildContext context) async {
+  String seleccionado = 'Mañana (9:00 - 13:00)';
+
+  return showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Elige un horario'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RadioListTile<String>(
+                  title: const Text('Mañana (9:00 - 13:00)'),
+                  value: 'Mañana (9:00 - 13:00)',
+                  groupValue: seleccionado,
+                  onChanged: (v) => setState(() => seleccionado = v!),
+                ),
+                RadioListTile<String>(
+                  title: const Text('Tarde (16:00 - 20:00)'),
+                  value: 'Tarde (16:00 - 20:00)',
+                  groupValue: seleccionado,
+                  onChanged: (v) => setState(() => seleccionado = v!),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, null),
+                child: const Text('Cancelar'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, seleccionado),
+                child: const Text('Aceptar'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+/// ----------------------
+/// DIALOGO 2: CONFIRMACIÓN
+/// ----------------------
+Future<void> _mostrarDialogoConfirmacion(
+  BuildContext context,
+  String horario,
+) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('¡Inscripción confirmada!'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.check_circle, color: Colors.green, size: 50),
+            const SizedBox(height: 12),
+            const Text('Te has inscrito correctamente en el horario:'),
+            const SizedBox(height: 6),
+            Text(
+              horario,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
