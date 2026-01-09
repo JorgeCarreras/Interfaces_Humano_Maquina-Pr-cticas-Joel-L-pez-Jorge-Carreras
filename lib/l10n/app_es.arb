@@ -1,0 +1,19 @@
+{
+  "@@locale": "es",
+  "appTitle": "GandiaSurf",
+  "activitiesTitle": "Listado de actividades náuticas",
+  "reserve": "Reservar",
+  "chooseSchedule": "Elige un horario",
+  "morning": "Mañana (9:00 - 13:00)",
+  "afternoon": "Tarde (16:00 - 20:00)",
+  "cancel": "Cancelar",
+  "accept": "Aceptar",
+  "confirmedTitle": "¡Inscripción confirmada!",
+  "confirmedText": "Te has inscrito correctamente en el horario:",
+  "ok": "OK",
+  "price": "Precio",
+  "duration": "Duración",
+  "level": "Nivel",
+  "rating": "Valoración",
+  "loading": "Cargando..."
+}

@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appTitle": "Nautical School",
+  "activitiesTitle": "Water sports activities",
+  "reserve": "Book",
+  "chooseSchedule": "Choose a time slot",
+  "morning": "Morning (9:00 - 13:00)",
+  "afternoon": "Afternoon (16:00 - 20:00)",
+  "cancel": "Cancel",
+  "accept": "Accept",
+  "confirmedTitle": "Booking confirmed!",
+  "confirmedText": "You have successfully booked the time slot:",
+  "ok": "OK",
+  "price": "Price",
+  "duration": "Duration",
+  "level": "Level",
+  "rating": "Rating",
+  "loading": "Loading..."
+}

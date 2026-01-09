@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jlopiba_carreritas/actividades.dart';
 import 'package:jlopiba_carreritas/loading_page.dart';
 import 'portada.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/generated/app_localizations.dart';
+
+
 
 
 void main() {
@@ -13,23 +16,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'GandiaSurf',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        scaffoldBackgroundColor: const Color(0xFFF5F0EB),
-      ),
-      home: const PortadaPage(),
-    );
+  return MaterialApp(
+    locale: const Locale('en'), //  fuerza inglés
+    onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+    localizationsDelegates: [
+      AppLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    supportedLocales: const [
+      Locale('es'),
+      Locale('en'),
+    ],
+    home: const PortadaPage(),
+  );
+
   }
-}
+} // ✅ CIERRE DE MyApp
 
 class LogoPage extends StatelessWidget {
   const LogoPage({super.key});
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +54,9 @@ class LogoPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //  Logo con círculo y texto
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Círculo grande (solo borde)
                   Container(
                     width: 320,
                     height: 180,
@@ -63,8 +68,6 @@ class LogoPage extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  // Texto “GandiaSurf” con círculo azul en medio
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -96,10 +99,7 @@ class LogoPage extends StatelessWidget {
                   ),
                 ],
               ),
-
               const SizedBox(height: 60),
-
-              //  Campo usuario
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: TextField(
@@ -113,10 +113,7 @@ class LogoPage extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              // Campo contraseña texto visible
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: TextField(
@@ -130,10 +127,7 @@ class LogoPage extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 40),
-
-              // Botón LOGIN
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -168,5 +162,3 @@ class LogoPage extends StatelessWidget {
     );
   }
 }
-
-
