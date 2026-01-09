@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'main.dart'; // para acceder a LogoPage
 import 'form_reserva.dart'; // todavía no existe, pero lo prepararemos
+import 'playa_live.dart';
+
 
 class PortadaPage extends StatelessWidget {
   const PortadaPage({super.key});
@@ -48,7 +50,9 @@ class PortadaPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(builder: (context) => const LogoPage()),
                   );
+                  
                 },
+                
                 child: const Text(
                   "LOGIN",
                   style: TextStyle(fontSize: 22, color: Colors.white),
@@ -77,6 +81,35 @@ class PortadaPage extends StatelessWidget {
                   style: TextStyle(fontSize: 22, color: Colors.white),
                 ),
               ),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PlayaLivePage()),
+                    );
+                  },
+                  child: Container(
+                    width: 250,
+                    height: 60,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 33, 243, 54),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Playa en directo',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
             ],
           ),
         ),

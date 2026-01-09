@@ -189,6 +189,14 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
 
   bool _passVisible = false;
 
+  // ===== REQ: Dropdown nivel de experiencia =====
+  String? _nivelExperiencia; // Principiante / Medio / Avanzado
+
+  // ===== REQ: Preferencia escuela (radio) =====
+  String? _escuela; // Club Nautico / La Ducal / Zona Norte / Aun no lo se
+
+  // ===== REQ: Términos y condiciones =====
+  bool _aceptaTerminos = false;
 
   final List<String> _imagenes = const [
     'assets/img/surf.jpg',
@@ -234,8 +242,8 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
   int _edad(DateTime nacimiento) {
     final now = DateTime.now();
     int age = now.year - nacimiento.year;
-    final hadBirthday =
-        (now.month > nacimiento.month) || (now.month == nacimiento.month && now.day >= nacimiento.day);
+    final hadBirthday = (now.month > nacimiento.month) ||
+        (now.month == nacimiento.month && now.day >= nacimiento.day);
     if (!hadBirthday) age--;
     return age;
   }
@@ -311,7 +319,8 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
     return null;
   }
 
-  InputDecoration _dec(String label, {String? hint, Widget? suffixIcon}) => InputDecoration(
+  InputDecoration _dec(String label, {String? hint, Widget? suffixIcon}) =>
+      InputDecoration(
         labelText: label,
         hintText: hint,
         border: const OutlineInputBorder(),
@@ -319,6 +328,14 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
       );
 
   Widget _sp() => const SizedBox(height: 12);
+
+  Widget _tituloSeccion(String text) => Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 6),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+      );
 
   void _cambiarTipo(TipoRegistro? t) {
     if (t == null) return;
@@ -333,7 +350,19 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
     final errFecha =
         _fechaVal(isMenor ? _menorNacimiento : _mayorNacimiento, mayor: !isMenor);
     if (errFecha != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errFecha)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errFecha)),
+      );
+      return;
+    }
+
+    // (Opcional) aunque se valida con FormField, lo dejamos por seguridad
+    if (_escuela == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Selecciona la escuela donde quieres hacer la actividad'),
+        ),
+      );
       return;
     }
 
@@ -352,7 +381,8 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!isMenor) ...[
-                const Text('Datos del participante', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Datos del participante',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 const Divider(),
                 resumenFila('Nombre', _mayorNombreCtrl.text),
                 resumenFila('Apellidos', _mayorApellidosCtrl.text),
@@ -361,9 +391,17 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
                 resumenFila('DNI/NIE', _mayorDniCtrl.text.toUpperCase()),
                 resumenFila('Email', _mayorEmailCtrl.text),
                 resumenFila('Contraseña', '••••••••'),
+                const SizedBox(height: 12),
+                const Text('Preferencias',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Divider(),
+                resumenFila('Nivel', _nivelExperiencia ?? ''),
+                resumenFila('Escuela', _escuela ?? ''),
+                resumenFila('Términos aceptados', _aceptaTerminos ? 'Sí' : 'No'),
               ],
               if (isMenor) ...[
-                const Text('Datos del menor', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Datos del menor',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 const Divider(),
                 resumenFila('Nombre', _menorNombreCtrl.text),
                 resumenFila('Apellidos', _menorApellidosCtrl.text),
@@ -371,7 +409,8 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
                 resumenFila('DNI/NIE', _menorDniCtrl.text.toUpperCase()),
                 resumenFila('Contraseña', '••••••••'),
                 const SizedBox(height: 12),
-                const Text('Tutor legal', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Tutor legal',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 const Divider(),
                 resumenFila('Nombre', _tutorNombreCtrl.text),
                 resumenFila('Apellidos', _tutorApellidosCtrl.text),
@@ -381,6 +420,13 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
                 const SizedBox(height: 12),
                 resumenFila('Puede irse solo', _puedeIrseSolo ? 'Sí' : 'No'),
                 resumenFila('Observaciones', _observacionesCtrl.text),
+                const SizedBox(height: 12),
+                const Text('Preferencias',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Divider(),
+                resumenFila('Nivel', _nivelExperiencia ?? ''),
+                resumenFila('Escuela', _escuela ?? ''),
+                resumenFila('Términos aceptados', _aceptaTerminos ? 'Sí' : 'No'),
               ],
             ],
           ),
@@ -438,6 +484,11 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
       _puedeIrseSolo = false;
       _tipo = TipoRegistro.mayor;
       _passVisible = false;
+
+      // Reset requisitos nuevos
+      _nivelExperiencia = null;
+      _escuela = null;
+      _aceptaTerminos = false;
     });
   }
 
@@ -701,6 +752,128 @@ class _RegistroActividadPageState extends State<RegistroActividadPage> {
                 maxLines: 6,
               ),
             ],
+
+            _sp(),
+            const Divider(height: 28),
+
+            // =============================
+            // REQ 1: Dropdown NIVEL EXPERIENCIA
+            // =============================
+            _tituloSeccion('Nivel de experiencia'),
+            DropdownButtonFormField<String>(
+              value: _nivelExperiencia,
+              decoration: _dec('Selecciona tu nivel'),
+              items: const [
+                DropdownMenuItem(value: 'Principiante', child: Text('Principiante')),
+                DropdownMenuItem(value: 'Medio', child: Text('Medio')),
+                DropdownMenuItem(value: 'Avanzado', child: Text('Avanzado')),
+              ],
+              onChanged: (v) => setState(() => _nivelExperiencia = v),
+              validator: (v) => (v == null) ? 'Selecciona un nivel de experiencia' : null,
+            ),
+
+            _sp(),
+
+            // =============================
+            // REQ 2: Preferencia ESCUELA (RADIOS)
+            // =============================
+            _tituloSeccion('Escuela donde quieres hacer la actividad'),
+            FormField<String>(
+              validator: (v) => (_escuela == null) ? 'Selecciona una escuela' : null,
+              builder: (state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Card(
+                      child: Column(
+                        children: [
+                          RadioListTile<String>(
+                            title: const Text('Club Náutico'),
+                            value: 'Club Náutico',
+                            groupValue: _escuela,
+                            onChanged: (v) {
+                              setState(() => _escuela = v);
+                              state.didChange(v);
+                            },
+                          ),
+                          RadioListTile<String>(
+                            title: const Text('Centro de La Ducal'),
+                            value: 'Centro de La Ducal',
+                            groupValue: _escuela,
+                            onChanged: (v) {
+                              setState(() => _escuela = v);
+                              state.didChange(v);
+                            },
+                          ),
+                          RadioListTile<String>(
+                            title: const Text('Centro Zona Norte'),
+                            value: 'Centro Zona Norte',
+                            groupValue: _escuela,
+                            onChanged: (v) {
+                              setState(() => _escuela = v);
+                              state.didChange(v);
+                            },
+                          ),
+                          RadioListTile<String>(
+                            title: const Text('Aún no lo sé'),
+                            value: 'Aún no lo sé',
+                            groupValue: _escuela,
+                            onChanged: (v) {
+                              setState(() => _escuela = v);
+                              state.didChange(v);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (state.hasError)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12, top: 6),
+                        child: Text(
+                          state.errorText!,
+                          style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+
+            _sp(),
+
+            // =============================
+            // REQ 3: Aceptar Términos (CHECKBOX obligatorio)
+            // =============================
+            FormField<bool>(
+              initialValue: _aceptaTerminos,
+              validator: (v) =>
+                  (_aceptaTerminos == true) ? null : 'Debes aceptar los términos y condiciones',
+              builder: (state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      value: _aceptaTerminos,
+                      onChanged: (v) {
+                        setState(() => _aceptaTerminos = v ?? false);
+                        state.didChange(v ?? false);
+                      },
+                      title: const Text('Acepto los términos y condiciones / política de privacidad'),
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
+                    if (state.hasError)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: Text(
+                          state.errorText!,
+                          style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
 
             _sp(),
             Row(

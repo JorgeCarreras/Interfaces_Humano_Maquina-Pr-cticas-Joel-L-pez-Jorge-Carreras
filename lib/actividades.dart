@@ -81,10 +81,10 @@ class ActividadesPage extends StatelessWidget {
           final actividades = snapshot.data!;
           final width = MediaQuery.of(context).size.width;
 
-          // ✅ breakpoint por anchura
+          //breakpoint por anchura
           final bool isWide = width >= Breakpoints.phone;
 
-          // ✅ decide columnas según ancho (2 tablet, 3 desktop)
+          // decide columnas según ancho (2 tablet, 3 desktop)
           final int columns = width >= Breakpoints.tablet ? 3 : 2;
 
           return isWide
